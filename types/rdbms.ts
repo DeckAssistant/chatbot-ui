@@ -27,6 +27,12 @@ export class RDBMSUser {
 
   @Column({ type: textType, nullable: true })
   pass!: string | null;
+
+  @Column({ type: timestampType, default: () => 'NOW()' })
+  created_at!: Date;
+
+  @Column({ type: timestampType, default: () => 'CURRENT_TIMESTAMP' })
+  updated_at!: Date;
 }
 
 
@@ -44,6 +50,12 @@ export class RDBMSFolder {
 
   @Column()
   folder_type!: string;
+
+  @Column({ type: timestampType, default: () => 'NOW()' })
+  created_at!: Date;
+
+  @Column({ type: timestampType, default: () => 'CURRENT_TIMESTAMP' })
+  updated_at!: Date;
 }
 
 
@@ -73,7 +85,10 @@ export class RDBMSConversation {
   folder!: RDBMSFolder | null
 
   @Column({ type: timestampType, default: () => 'NOW()' })
-  creation_time!: Date;
+  created_at!: Date;
+
+  @Column({ type: timestampType, default: () => 'CURRENT_TIMESTAMP' })
+  updated_at!: Date;
 }
 
 
@@ -99,6 +114,12 @@ export class RDBMSMessage {
 
   @Column({ type: timestampType, default: () => 'NOW()' })
   timestamp!: Date;
+
+  @Column({ type: timestampType, default: () => 'NOW()' })
+  created_at!: Date;
+
+  @Column({ type: timestampType, default: () => 'CURRENT_TIMESTAMP' })
+  updated_at!: Date;
 }
 
 @Entity()
@@ -125,6 +146,12 @@ export class RDBMSPrompt {
   @ManyToOne(() => RDBMSFolder, { onUpdate: "CASCADE" })
   @JoinColumn()
   folder!: RDBMSFolder | null
+
+  @Column({ type: timestampType, default: () => 'NOW()' })
+  created_at!: Date;
+
+  @Column({ type: timestampType, default: () => 'CURRENT_TIMESTAMP' })
+  updated_at!: Date;
 }
 
 @Entity()
@@ -141,4 +168,10 @@ export class RDBMSSystemPrompt {
 
   @Column({type: textType})
   content!: string | '';
+
+  @Column({ type: timestampType, default: () => 'NOW()' })
+  created_at!: Date;
+
+  @Column({ type: timestampType, default: () => 'CURRENT_TIMESTAMP' })
+  updated_at!: Date;
 }

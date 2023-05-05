@@ -241,12 +241,13 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'Chatbot UI'
+                      'DeckAssistant'
                     )}
                   </div>
 
+                  {/*DECKASSISTANT EDIT
                   {models.length > 0 && (
-                    <div className="flex h-full flex-col space-y-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-600">
+                     <div className="flex h-full flex-col space-y-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-600">
                       <ModelSelect />
 
                       <SystemPromptSection systemPrompts={systemPrompts} />
@@ -261,11 +262,12 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         }
                       />
                     </div>
-                  )}
+                  )}*/}
                 </div>
               </>
             ) : (
               <>
+                {/* DECKASSISTANT EDIT
                 <div className="sticky top-0 z-10 flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
                   {t('Model')}: {selectedConversation?.model.name} | {t('Temp')}
                   : {selectedConversation?.temperature} |
@@ -288,7 +290,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                       <ModelSelect />
                     </div>
                   </div>
-                )}
+                )}*/}
 
                 {selectedConversation?.messages.map((message, index) => (
                   <MemoizedChatMessage

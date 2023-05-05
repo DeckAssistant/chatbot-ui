@@ -24,3 +24,13 @@ export const rdbmsDeleteConversation = async (conversationId: string) => {
     body: JSON.stringify({ conversation_id: conversationId }),
   });
 };
+
+// DECKASSISTANT EDIT
+export const rdbmsGetConversation = async (conversationId: string) => {
+  const response = await fetch('api/rdbms/conversation?conversation_id=' + conversationId, {
+    method: 'GET',
+  });
+  const text = await response.text();
+  return text;
+};
+// END DECKASSISTANT EDIT

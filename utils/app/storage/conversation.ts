@@ -7,6 +7,7 @@ import {
   rdbmsCreateConversation,
   rdbmsDeleteConversation,
   rdbmsUpdateConversation,
+  rdbmsGetConversation,
 } from './rdbms/conversation';
 import { saveSelectedConversation } from './selectedConversation';
 
@@ -76,3 +77,18 @@ export const storageDeleteConversation = (
 
   return updatedConversations;
 };
+
+// DECKASSISTANT EDIT
+export const storageGetConversationById = async (
+  storageType: StorageType,
+  conversationId: string,
+) => {
+  var conversation = "";
+  if (storageType === StorageType.RDBMS) {
+    conversation = await rdbmsGetConversation(conversationId);
+  }
+
+  return conversation;
+};
+
+// END DECKASSISTANT EDIT

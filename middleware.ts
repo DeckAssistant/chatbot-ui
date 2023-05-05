@@ -30,6 +30,9 @@ export default withAuth({
     },
   },
   secret: getSecret(),
+  pages: {
+    signIn: "/signin",
+  },
 });
 
 export const config = { matcher: ['/'] };

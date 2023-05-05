@@ -82,9 +82,6 @@ export const getDataSource = async () => {
   } else if (RDBMS_DB_TYPE === 'mysql') {
     dataSource = new DataSource({
       type: 'mysql',
-      extra: {
-        program_name: 'chatbot',
-      },
       host: RDBMS_HOST,
       port: RDBMS_PORT,
       username: RDBMS_USER,

@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   chatbot:
-    image: ghcr.io/mckaywrigley/chatbot-ui:main
+    build: .
     restart: unless-stopped
     ports:
       - 3000:3000
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./couchdb.ini:/opt/couchdb/etc/local.d/00-local.ini
-      - './data:/opt/couchdb/data'
+      - couchdb:/opt/couchdb/data
     env_file:
       - .env.local
     networks:
@@ -26,3 +26,6 @@ services:
 
 networks:
   chatbot:
+
+volumes:
+  couchdb:

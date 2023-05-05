@@ -62,7 +62,8 @@ export const ChatbarSettings = () => {
         <ClearConversations onClearConversations={handleClearConversations} />
       ) : null}
 
-      <Import onImport={handleImportConversations} />
+      {/* DECKASSISTANT EDIT
+      <Import onImport={handleImportConversations} />*/}
 
       <SidebarButton
         text={t('Export data')}
@@ -70,6 +71,7 @@ export const ChatbarSettings = () => {
         onClick={() => handleExportData(databaseType || 'localStorage')}
       />
 
+      {/* DECKASSISTANT EDIT
       <SidebarButton
         text={t('Settings')}
         icon={<IconSettings size={18} />}
@@ -80,7 +82,7 @@ export const ChatbarSettings = () => {
         <Key apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
       ) : null}
 
-      {!serverSidePluginKeysSet ? <PluginKeys /> : null}
+      {!serverSidePluginKeysSet ? <PluginKeys /> : null}*/}
 
       {NEXT_PUBLIC_NEXTAUTH_ENABLED && (
         <SidebarButton

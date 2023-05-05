@@ -8,8 +8,11 @@ import {
   RDBMSConversation,
   RDBMSFolder,
   RDBMSUser,
+  RDBMSMessage,
 } from '../../../types/rdbms';
 import { Conversation } from '@/types/chat';
+import { Message, Role } from '@/types/chat';
+import { OpenAIModelID, OpenAIModels } from '@/types/openai';
 
 import { authOptions } from './../auth/[...nextauth]';
 
@@ -76,6 +79,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         dataSource,
         user,
         conversationId,
+      );
+    } else {
+      await dataSource.destroy();
+      return res.status(400).json({ error: 'No conversation_id provided' });
+    }
+  } else if (req.method === 'GET') {
+    const query = req.query;
+    const { conversation_id } = query;
+    const conversationId = conversation_id;
+    if (conversationId !== undefined) {
+      return await rdbmsGetConversation(
+        res,
+        dataSource,
+        user,
+        String(conversationId),
       );
     } else {
       await dataSource.destroy();
@@ -184,5 +202,69 @@ const rdbmsDeleteConversation = async (
     OK: true,
   });
 };
+
+// DECKASSISTANT EDIT
+const rdbmsGetConversation = async (
+  res: NextApiResponse,
+  dataSource: DataSource,
+  user: RDBMSUser,
+  conversationId: string,
+) => {
+  const conversationRepo = dataSource.getRepository(RDBMSConversation);
+  const rdbmsConversation = await conversationRepo.findOneBy({
+    user: { id: user.id },
+    id: conversationId,
+  });
+
+  if(rdbmsConversation) {
+    const model_id = rdbmsConversation.model_id as keyof typeof OpenAIModelID;
+
+    const model = (OpenAIModels as any)[model_id];
+
+    const messageRepo = dataSource.getRepository(RDBMSMessage);
+    const rdbmsMessages = await messageRepo.find({
+      where: {
+        user: { id: user.id },
+        conversation: { id: conversationId },
+      },
+      order: { timestamp: { direction: 'ASC' } },
+    });
+
+    const messages: Message[] = [];
+    rdbmsMessages.forEach((rdbmsMessage) => {
+      let message: Message = {
+        id: rdbmsMessage.id,
+        content: rdbmsMessage.content,
+        role: rdbmsMessage.role as Role,
+      };
+      messages.push(message);
+    });
+
+    let folderId = null;
+    if(rdbmsConversation.folder !== undefined) {
+      console.log(rdbmsConversation.folder);
+      if(rdbmsConversation.folder?.id !== undefined) {
+        folderId = rdbmsConversation.folder.id;
+      }
+    }
+    let conversation: Conversation = {
+      id: rdbmsConversation.id,
+      name: rdbmsConversation.name,
+      model: model,
+      messages: messages,
+      folderId: folderId,
+      prompt: rdbmsConversation.prompt,
+      temperature: rdbmsConversation.temperature,
+    };
+
+    await dataSource.destroy();
+    return res.status(200).json(conversation);
+  }
+  else {
+    await dataSource.destroy();
+    return res.status(404).json({ OK: false });
+  }
+};
+// EDIT DECKASSISTANT EDIT
 
 export default handler;
