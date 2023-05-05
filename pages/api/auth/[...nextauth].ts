@@ -29,6 +29,35 @@ if (process.env.GITHUB_CLIENT_ID) {
   );
 }
 
+if(process.env.CUSTOM_OAUTH_URL) {
+  providers.push(
+    {
+      id: "deckassistant",
+      name: "DeckAssistant",
+      type: "oauth",
+      scope: '',
+      clientId: process.env.CUSTOM_OAUTH_CLIENT_ID,
+      clientSecret: process.env.CUSTOM_OAUTH_CLIENT_SECRET,
+      authorization: {
+        url: process.env.CUSTOM_OAUTH_URL + "/oauth/authorize",
+        params: {
+          scope: ""
+        }
+      },
+      token: process.env.CUSTOM_OAUTH_URL + "/oauth/token",
+      userinfo: process.env.CUSTOM_OAUTH_URL + "/api/oauth/user/me",
+      profile(profile) {
+        return {
+          id: profile.id,
+          name: profile.name,
+          email: profile.email,
+          image: null
+        }
+      },
+    }
+  );
+}
+
 export const authOptions: NextAuthOptions = {
   providers: providers,
   session: { strategy: 'jwt' },
