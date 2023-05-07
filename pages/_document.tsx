@@ -26,7 +26,7 @@ export default function Document(props: Props) {
         <meta property="twitter:title" content="DeckAssistant - AI Assistant for Stream Deck"/>
         <meta property="twitter:description" content="Stream Deck plugin that puts A.I. at your fingertips. Literally."/>
         <meta property="twitter:image" content="https://deckassistant.io/images/poster.png"/>
-        <Script defer data-domain="deckassistant.io" src="https://stats.lostdomain.org/js/script.tagged-events.outbound-links.js" />
+        <Script defer data-domain="chat.deckassistant.io" src="https://stats.lostdomain.org/js/script.tagged-events.outbound-links.js" />
       </Head>
       <body>
         <Main />

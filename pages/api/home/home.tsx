@@ -590,7 +590,7 @@ const Home = ({
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Script defer data-domain="deckassistant.io" src="https://stats.lostdomain.org/js/script.tagged-events.outbound-links.js" />
+      <Script defer data-domain="chat.deckassistant.io" src="https://stats.lostdomain.org/js/script.tagged-events.outbound-links.js" />
       {selectedConversation && (
         <div className="min-h-screen flex flex-col">
           <header>
