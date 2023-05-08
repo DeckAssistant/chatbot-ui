@@ -81,6 +81,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/router';
 import Script from 'next/script'
 import Link from 'next/link';
+import Image from 'next/image';
 // DECKASSISTANT EDIT
 
 interface Props {
@@ -602,7 +603,8 @@ const Home = ({
                               <Link href="https://deckassistant.io/">
                                 <img className="block h-14 w-auto lg:hidden" src="https://deckassistant.io/images/deckassistant-logo.png"
                                     alt="DeckAssistant" /></Link>
-                                <Link href="https://deckassistant.io/"><img className="hidden h-14 w-auto lg:block" src="https://deckassistant.io/images/deckassistant-logo.png"
+                                <Link href="https://deckassistant.io/">
+                                  <img className="hidden h-14 w-auto lg:block" src="https://deckassistant.io/images/deckassistant-logo.png"
                                     alt="DeckAssistant" /></Link>
                                 <div className="hidden lg:block text-white ml-4 text-xl">
                                   <Link href="https://deckassistant.io/">DeckAssistant</Link>

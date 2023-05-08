@@ -15,7 +15,6 @@ export default function Document(props: Props) {
       <Head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="DeckAssistant - Chatbot UI"></meta>
-        <title>DeckAssistant - Chatbot UI</title>
         <meta name="title" content="DeckAssistant - AI Assistant for Stream Deck"/>
         <meta name="description" content="Stream Deck plugin that puts A.I. at your fingertips. Literally."/>
         <meta property="og:type" content="website"/>

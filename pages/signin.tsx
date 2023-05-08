@@ -1,6 +1,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const Signin = () => {
   const router = useRouter();
@@ -12,9 +13,14 @@ const Signin = () => {
     } else if (status === "authenticated") {
       void router.push("/");
     }
-  }, [status]);
+  }, [status, router]);
 
-  return <div></div>;
+  return (
+  <div>
+    <Head>
+      <title>DeckAssistant - Logging in..</title>
+    </Head>
+  </div>);
 }
 
 export default Signin;
