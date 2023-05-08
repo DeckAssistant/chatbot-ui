@@ -95,7 +95,7 @@ export const getDataSource = async () => {
         RDBMSPrompt,
         RDBMSSystemPrompt,
       ],
-      synchronize: RDBMS_SYNCHRONIZE,
+      synchronize: false,
       logging: false,
       ssl: RDBMS_SSL_ENABLED ? tslOptions : undefined,
     });
@@ -118,7 +118,7 @@ export const getDataSource = async () => {
         RDBMSPrompt,
         RDBMSSystemPrompt,
       ],
-      synchronize: RDBMS_SYNCHRONIZE,
+      synchronize: false,
       logging: false,
       ssl: RDBMS_SSL_ENABLED ? tslOptions : undefined,
     });
