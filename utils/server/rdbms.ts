@@ -144,14 +144,19 @@ export const getDataSource = async () => {
 export const getUser = async (dataSource: DataSource, id: string) => {
   // Try to fetch account from database
   const userRepo = dataSource.getRepository(RDBMSUser);
-  let rdbmsUser = await userRepo.findOneBy({ id: id });
+  let user_email = id.toLowerCase();
+  let rdbmsUser = await userRepo.findOneBy({ id: user_email });
 
   // If no user found, create a new one
   if (!rdbmsUser) {
     rdbmsUser = new RDBMSUser();
-    rdbmsUser.id = id.toLowerCase();
+    rdbmsUser.id = user_email;
   }
 
-  await userRepo.save(rdbmsUser);
+  try {
+    await userRepo.save(rdbmsUser);
+  } catch (e) {
+    console.log(e);
+  }
   return rdbmsUser;
 };

@@ -599,13 +599,13 @@ const Home = ({
                     <div className="flex h-16">
                         <div className="flex">
                             <div className="flex flex-shrink-0 items-center justify-start">
-                              <Link href="/">
+                              <Link href="https://deckassistant.io/">
                                 <img className="block h-14 w-auto lg:hidden" src="https://deckassistant.io/images/deckassistant-logo.png"
                                     alt="DeckAssistant" /></Link>
-                                <Link href="/"><img className="hidden h-14 w-auto lg:block" src="https://deckassistant.io/images/deckassistant-logo.png"
+                                <Link href="https://deckassistant.io/"><img className="hidden h-14 w-auto lg:block" src="https://deckassistant.io/images/deckassistant-logo.png"
                                     alt="DeckAssistant" /></Link>
                                 <div className="hidden lg:block text-white ml-4 text-xl">
-                                  <Link href="/">DeckAssistant</Link>
+                                  <Link href="https://deckassistant.io/">DeckAssistant</Link>
                                 </div>
                             </div>
 
@@ -613,7 +613,7 @@ const Home = ({
                         <div className="-mr-2 flex justify-items-end grow">
                             <div className="flex flex-grow grid justify-items-end">
                                 <div className="relative inline-block text-left mt-3 text-white align-middle">
-                                  <Link className="align-middle inline-block rounded-md bg-white px-3.5 py-2.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" href="/dashboard">
+                                  <Link className="align-middle inline-block rounded-md bg-white px-3.5 py-2.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" href="https://deckassistant.io/dashboard">
                                     Manage Your Account
                                     </Link>
                                 </div>

@@ -76,7 +76,7 @@ const handler = async (req: Request): Promise<Response> => {
       tokenCount,
     );
 
-    return new Response(stream);
+    return new Response(stream, { headers: { 'Content-Type': 'text/event-stream; charset=utf-8' } });
   } catch (error) {
     console.error(error);
     if (error instanceof OpenAIError) {
