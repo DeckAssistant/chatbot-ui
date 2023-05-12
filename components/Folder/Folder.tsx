@@ -4,6 +4,7 @@ import {
   IconCheck,
   IconPencil,
   IconTrash,
+  IconPlus,
   IconX,
 } from '@tabler/icons-react';
 import {
@@ -33,12 +34,13 @@ const Folder = ({
   handleDrop,
   folderComponent,
 }: Props) => {
-  const { handleDeleteFolder, handleUpdateFolder } = useContext(HomeContext);
+  const { handleDeleteFolder, handleUpdateFolder, handleNewConversationInFolder } = useContext(HomeContext);
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const isChatFolder = (currentFolder.type == 'chat');
 
   const handleEnterDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
@@ -51,6 +53,10 @@ const Folder = ({
     handleUpdateFolder(currentFolder.id, renameValue);
     setRenameValue('');
     setIsRenaming(false);
+  };
+
+  const handleNewConversation = () => {
+    handleNewConversationInFolder(currentFolder.id);
   };
 
   const dropHandler = (e: any) => {
@@ -163,6 +169,16 @@ const Folder = ({
 
         {!isDeleting && !isRenaming && (
           <div className="absolute right-1 z-10 flex text-gray-300">
+            {(isChatFolder) && (
+            <SidebarActionButton
+              handleClick={(e) => {
+                e.stopPropagation();
+                handleNewConversation();
+              }}
+            >
+              <IconPlus size={18} />
+            </SidebarActionButton>
+            )}
             <SidebarActionButton
               handleClick={(e) => {
                 e.stopPropagation();

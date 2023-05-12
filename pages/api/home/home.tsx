@@ -224,7 +224,7 @@ const Home = ({
 
   // CONVERSATION OPERATIONS  --------------------------------------------
 
-  const handleNewConversation = async () => {
+  const handleNewConversation = async (folderId: string = "") => {
     const lastConversation = conversations[conversations.length - 1];
 
     const defaultSystemPrompt = systemPrompts.find(
@@ -248,7 +248,7 @@ const Home = ({
       },
       prompt: systemPrompt,
       temperature: DEFAULT_TEMPERATURE,
-      folderId: (selectedConversation ? selectedConversation.folderId : null),
+      folderId: (folderId ? folderId : (selectedConversation ? selectedConversation.folderId : null)),
     };
 
     const updatedConversations = storageCreateConversation(
@@ -268,6 +268,14 @@ const Home = ({
 
     dispatch({ field: 'loading', value: false });
   };
+
+  // DECKASSISTANT EDIT
+  const handleNewConversationInFolder = (
+    folderId : string
+  ) => {
+    handleNewConversation(folderId);
+  };
+  // END DECKASSISTANT EDIT
 
   const handleUpdateConversation = (
     conversation: Conversation,
@@ -569,6 +577,7 @@ const Home = ({
         handleCreateSystemPrompt,
         handleUpdateSystemPrompt,
         handleDeleteSystemPrompt,
+        handleNewConversationInFolder,
       }}
     >
       <Head>
