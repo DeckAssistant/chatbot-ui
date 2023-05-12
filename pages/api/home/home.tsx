@@ -248,7 +248,7 @@ const Home = ({
       },
       prompt: systemPrompt,
       temperature: DEFAULT_TEMPERATURE,
-      folderId: null,
+      folderId: (selectedConversation ? selectedConversation.folderId : null),
     };
 
     const updatedConversations = storageCreateConversation(
