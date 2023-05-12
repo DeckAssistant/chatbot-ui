@@ -125,6 +125,22 @@ const Home = ({
 
   const stopConversationRef = useRef<boolean>(false);
 
+  // DECKASSISTANT KEYBOARD SHORTCUT
+  useEffect(() => {
+    const handleKeyDown = (event : any) => {
+      if (event.ctrlKey && event.altKey && event.key === "n") {
+        handleNewConversation();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+  // END DECKASSISTANT KEYBOARD SHORTCUT
+
   const { data, error, refetch } = useQuery(
     ['GetModels', apiKey, serverSideApiKeyIsSet],
     ({ signal }) => {
@@ -503,8 +519,6 @@ const Home = ({
     if(conversationIdParam && !selectedConversation) {
       console.log(conversationIdParam);
       selectedConversation = storageGetConversationById(storageType, conversationIdParam).then((selectedConversation) => {
-        console.log('selectedConversation:');
-        console.log(selectedConversation);
         try {
           const parsedSelectedConversation: Conversation =
           JSON.parse(selectedConversation);
