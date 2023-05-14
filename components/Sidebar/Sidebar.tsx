@@ -20,7 +20,7 @@ interface Props<T> {
   searchTerm: string;
   handleSearchTerm: (searchTerm: string) => void;
   toggleOpen: () => void;
-  handleCreateItem: () => void;
+  handleCreateItem: (folderId: string) => void;
   handleCreateFolder: () => void;
   handleDrop: (e: any) => void;
 }
@@ -63,7 +63,7 @@ const Sidebar = <T,>({
           <button
             className="text-sidebar flex w-[190px] flex-shrink-0 cursor-pointer select-none items-center gap-3 rounded-md border border-white/20 p-3 text-white transition-colors duration-200 hover:bg-gray-500/10"
             onClick={() => {
-              handleCreateItem();
+              handleCreateItem('');
               handleSearchTerm('');
             }}
           >
