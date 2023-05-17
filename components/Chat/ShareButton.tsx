@@ -23,8 +23,6 @@ export const ShareButton: FC<Props> = ({
 
 
   return (
-    <div className="flex flex-col">
-      <div className="mb-1 w-full rounded bg-transparent pr-2 text-neutral-900 dark:text-white">
     <button className="mx-auto flex w-fit items-center gap-3 rounded border border-neutral-200 bg-white py-2 px-4 text-black hover:opacity-50 dark:border-neutral-600 dark:bg-[#343541] dark:text-white"
       onClick={onShareClicked}
     >
@@ -37,7 +35,5 @@ export const ShareButton: FC<Props> = ({
     )}
 
     </button>
-    </div>
-    </div>
   );
 };
