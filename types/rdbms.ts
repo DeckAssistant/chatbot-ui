@@ -89,6 +89,9 @@ export class RDBMSConversation {
 
   @Column({ type: timestampType, default: () => 'CURRENT_TIMESTAMP' })
   updated_at!: Date;
+
+  @Column({ default: false })
+  is_public!: boolean;
 }
 
 

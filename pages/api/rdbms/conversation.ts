@@ -160,6 +160,7 @@ const rdbmsUpdateConversation = async (
   rdbmsConversation.model_id = conversation.model.id;
   rdbmsConversation.prompt = conversation.prompt;
   rdbmsConversation.temperature = conversation.temperature;
+  rdbmsConversation.is_public = conversation.is_public;
 
   if (conversation.folderId !== null) {
     const updatedFolder = await folderRepo.findOneBy({
@@ -255,6 +256,7 @@ const rdbmsGetConversation = async (
       folderId: folderId,
       prompt: rdbmsConversation.prompt,
       temperature: rdbmsConversation.temperature,
+      is_public: rdbmsConversation.is_public,
     };
 
     await dataSource.destroy();

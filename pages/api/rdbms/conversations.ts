@@ -117,6 +117,7 @@ const rdbmsGetAllConversations = async (
         rdbmsConversation.folder !== null ? rdbmsConversation.folder.id : null,
       prompt: rdbmsConversation.prompt,
       temperature: rdbmsConversation.temperature,
+      is_public: rdbmsConversation.is_public,
     };
 
     conversations.push(conversation);
@@ -144,6 +145,7 @@ const rdbmsUpdateConversations = async (
     rdbmsConversation.model_id = conversation.model.id;
     rdbmsConversation.prompt = conversation.prompt;
     rdbmsConversation.temperature = conversation.temperature;
+    rdbmsConversation.is_public = conversation.is_public;
 
     if (conversation.folderId !== null) {
       const updatedFolder = await folderRepo.findOneBy({

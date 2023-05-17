@@ -264,6 +264,7 @@ const Home = ({
       },
       prompt: systemPrompt,
       temperature: DEFAULT_TEMPERATURE,
+      is_public: false,
       folderId: (folderId ? folderId : (selectedConversation ? selectedConversation.folderId : null)),
     };
 
