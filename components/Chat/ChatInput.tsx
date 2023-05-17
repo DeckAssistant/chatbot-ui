@@ -1,6 +1,7 @@
 import {
   IconArrowDown,
-  IconBolt,
+  IconShare,
+  IconRobot,
   IconBrandGoogle,
   IconPlayerStop,
   IconRepeat,
@@ -27,6 +28,7 @@ import HomeContext from '@/pages/api/home/home.context';
 import { PluginSelect } from './PluginSelect';
 import { PromptList } from './PromptList';
 import { VariableModal } from './VariableModal';
+import { ShareButton } from './ShareButton';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -37,6 +39,7 @@ interface Props {
     plugin: Plugin | null,
   ) => void;
   onRegenerate: (conversation: Conversation | undefined) => void;
+  onShareChat: (conversation: Conversation | undefined) => void;
   onScrollDownClick: () => void;
   stopConversationRef: MutableRefObject<boolean>;
   textareaRef: MutableRefObject<HTMLTextAreaElement | null>;
@@ -46,6 +49,7 @@ interface Props {
 export const ChatInput = ({
   onSend,
   onRegenerate,
+  onShareChat,
   onScrollDownClick,
   stopConversationRef,
   textareaRef,
@@ -119,6 +123,10 @@ export const ChatInput = ({
 
   const handleRegenerate = () => {
     onRegenerate(selectedConversation);
+  };
+
+  const handleShareChat = () => {
+    onShareChat(selectedConversation);
   };
 
   const handleStopConversation = () => {
@@ -300,10 +308,10 @@ export const ChatInput = ({
             onClick={() => setShowPluginSelect(!showPluginSelect)}
             onKeyDown={(e) => {}}
           >
-            {plugin ? <IconBrandGoogle size={20} /> : <IconBolt size={20} />}
+            {plugin ? <IconBrandGoogle size={20} /> : <IconRobot size={20} />}
           </button>
 
-          {showPluginSelect && (
+          {/*showPluginSelect && */(
             <div className="absolute left-0 bottom-14 rounded bg-white dark:bg-[#343541]">
               <PluginSelect
                 plugin={plugin}
@@ -323,8 +331,15 @@ export const ChatInput = ({
                   }
                 }}
               />
+
             </div>
           )}
+
+          <div className="absolute right-0 bottom-14 rounded bg-white dark:bg-[#343541]">
+            <ShareButton
+              onShareClicked={handleShareChat}
+            />
+          </div>
 
           <textarea
             ref={textareaRef}

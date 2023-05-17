@@ -17,7 +17,7 @@ const get = async (req: Request): Promise<Response> => {
   try {
     const response = await getRequest('conversations');
     const json = await response.json();
-    const conversations: Conversation[] = json?.data?.map(({id, name, messages, model, prompt, folderId}: Conversation) => ({id, name, messages, model, prompt, folderId})) || [];
+    const conversations: Conversation[] = json?.data?.map(({id, name, messages, model, prompt, folderId, is_public}: Conversation) => ({id, name, messages, model, prompt, folderId, is_public})) || [];
 
     return new Response(JSON.stringify(conversations), { status: 200 });
   } catch (error) {

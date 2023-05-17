@@ -14,6 +14,7 @@ import { useTranslation } from 'next-i18next';
 import { editMessageHandler } from '@/utils/app/handlers/EditMessage';
 import { regenerateMessageHandler } from '@/utils/app/handlers/RegenerateMessage';
 import { sendHandlerFunction } from '@/utils/app/handlers/SendMessage';
+import { shareChatHandler } from '@/utils/app/handlers/ShareChat';
 import { throttle } from '@/utils/data/throttle';
 
 import { Message } from '@/types/chat';
@@ -81,6 +82,13 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     selectedConversation,
     stopConversationRef,
     storageType,
+  ]);
+
+  const handleShareChat = useCallback(shareChatHandler, [
+    selectedConversation,
+    storageType,
+    !selectedConversation?.is_public,
+    homeDispatch,
   ]);
 
   const handleRegenerate = useCallback(regenerateMessageHandler, [
@@ -344,6 +352,12 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               );
             }}
             onScrollDownClick={handleScrollDown}
+            onShareChat={(conversation) => {
+                if(conversation) {
+                  handleShareChat(conversation, storageType, !conversation?.is_public, homeDispatch);
+                }
+              }
+            }
             onRegenerate={(conversation) => {
               if (currentMessage) {
                 handleRegenerate(
