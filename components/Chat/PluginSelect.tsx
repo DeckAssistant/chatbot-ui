@@ -61,7 +61,7 @@ export const PluginSelect: FC<Props> = ({
   }, []);
 
   return (
-      <div className="w-full rounded border pr-2 rounded border border-neutral-200 bg-white text-black hover:opacity-50 dark:border-neutral-600 dark:bg-[#343541] dark:text-white">
+      <div className="rounded border pr-2 rounded border border-neutral-200 bg-white text-black hover:opacity-50 dark:border-neutral-600 dark:bg-[#343541] dark:text-white">
         <select
           ref={selectRef}
           className="w-full cursor-pointer bg-transparent p-2"

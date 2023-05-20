@@ -283,7 +283,7 @@ export const ChatInput = ({
     <div className="absolute bottom-0 left-0 w-full border-transparent bg-gradient-to-b from-transparent via-white to-white pt-6 dark:border-white/20 dark:via-[#343541] dark:to-[#343541] md:pt-2">
       <div className="stretch mx-2 mt-4 flex flex-row gap-3 last:mb-2 md:mx-4 md:mt-[52px] md:last:mb-6 lg:mx-auto lg:max-w-3xl">
 
-        <div className="relative mx-auto mb-3 flex items-center gap-3 md:mb-2 md:mt-2">
+        <div className="relative mx-auto mb-3 flex items-end justify-end gap-3 md:mb-2 md:mt-2 w-1/3">
             <PluginSelect
               plugin={plugin}
               onKeyDown={(e: any) => {
@@ -304,10 +304,10 @@ export const ChatInput = ({
             />
         </div>
 
-        <div className="relative mx-auto mb-3 flex items-center gap-3 md:mb-2 md:mt-2">
+        <div className="relative mx-auto mb-3 flex items-center gap-2 md:mb-2 md:mt-2 w-full justify-center w-1/3">
         {messageIsStreaming && (
           <button
-            className="rounded border border-neutral-200 bg-white py-2 px-4 text-black hover:opacity-50 dark:border-neutral-600 dark:bg-[#343541] dark:text-white"
+            className="items-center gap-3 flex rounded border border-neutral-200 bg-white py-2 px-4 text-black hover:opacity-50 dark:border-neutral-600 dark:bg-[#343541] dark:text-white"
             onClick={handleStopConversation}
           >
             <IconPlayerStop size={16} /> {t('Stop Generating')}
@@ -326,7 +326,7 @@ export const ChatInput = ({
           )}
           </div>
 
-          <div className="relative mx-auto mb-3 flex items-center gap-3 md:mb-2 md:mt-2">
+          <div className="relative mx-auto mb-3 flex items-right gap-2 md:mb-2 md:mt-2 w-1/3 justify-start w-1/3">
             <ShareButton
               onShareClicked={handleShareChat}
             />
