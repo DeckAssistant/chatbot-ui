@@ -130,11 +130,18 @@ export const ConversationComponent = ({ conversation }: Props) => {
         >
           <IconMessage size={18} />
           <div
-            className={`relative max-h-5 flex-1 overflow-hidden text-ellipsis whitespace-nowrap break-all text-left text-[12.5px] leading-3 ${
-              selectedConversation?.id === conversation.id ? 'pr-12' : 'pr-1'
+            className={`relative flex-1 overflow-hidden text-ellipsis whitespace-nowrap break-all text-left text-[12.5px] ${
+              selectedConversation?.id === conversation.id ? 'pr-12 max-h-8 leading-4' : 'pr-1 max-h-5 leading-3'
             }`}
           >
             {conversation.name}
+            {selectedConversation?.id === conversation.id && (
+              <div className="block text-[12.5px] text-gray-400">
+                {conversation?.created_at
+                  ? new Date(conversation?.created_at).toLocaleString()
+                  : ''}
+              </div>
+            )}
           </div>
         </button>
       )}

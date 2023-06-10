@@ -266,6 +266,7 @@ const Home = ({
       temperature: DEFAULT_TEMPERATURE,
       is_public: false,
       folderId: (folderId ? folderId : (selectedConversation ? selectedConversation.folderId : null)),
+      created_at: new Date(),
     };
 
     const updatedConversations = storageCreateConversation(

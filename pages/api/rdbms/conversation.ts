@@ -257,6 +257,7 @@ const rdbmsGetConversation = async (
       prompt: rdbmsConversation.prompt,
       temperature: rdbmsConversation.temperature,
       is_public: rdbmsConversation.is_public,
+      created_at: rdbmsConversation.created_at,
     };
 
     await dataSource.destroy();
