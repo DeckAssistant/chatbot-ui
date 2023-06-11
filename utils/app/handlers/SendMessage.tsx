@@ -28,6 +28,12 @@ export const sendHandlerFunction = async (
     homeDispatch({ field: 'loading', value: true });
     homeDispatch({ field: 'messageIsStreaming', value: true });
 
+    // new conversation, create it first
+    let firstMessage = false;
+    if(selectedConversation.messages.length === 0) {
+      firstMessage = true;
+    }
+
     let updatedConversation: Conversation;
 
     updatedConversation = {
@@ -75,22 +81,6 @@ export const sendHandlerFunction = async (
       content: '',
     };
     if (!plugin) {
-      if (updatedConversation.messages.length === 1) {
-        const { content } = message;
-        const customName =
-          content.length > 30 ? content.substring(0, 30) + '...' : content;
-        updatedConversation = {
-          ...updatedConversation,
-          name: customName,
-        };
-
-        // Saving the conversation name
-        storageUpdateConversation(
-          storageType,
-          { ...selectedConversation, name: updatedConversation.name },
-          conversations,
-        );
-      }
       homeDispatch({ field: 'loading', value: false });
       const reader = data.getReader();
       const decoder = new TextDecoder();
@@ -142,5 +132,64 @@ export const sendHandlerFunction = async (
 
     homeDispatch({ field: 'conversations', value: all });
     saveSelectedConversation(single);
+
+    // get a recommended title for the conversation
+    if(firstMessage === true) {
+      console.log('Getting recommended subject..');
+      const messageSubject: Message = {
+        id: uuidv4(),
+        role: 'user',
+        content: 'What would be a short and relevant title for this chat? You must strictly answer with only the title, no other text is allowed.'
+      };
+
+      var tmpConversation = {
+        ...updatedConversation,
+        messages: [...updatedConversation.messages, messageSubject],
+      };
+      const { response: response_subject, controller: controller_subject } = await sendChatRequest(
+        tmpConversation,
+        plugin,
+        apiKey,
+        pluginKeys,
+      );
+
+      if (response_subject.ok && response_subject.body) {
+        const reader_s = response_subject.body.getReader();
+        const decoder_s = new TextDecoder();
+        let done = false;
+        let answer_subject = '';
+
+        while (!done) {
+          if (stopConversationRef.current === true) {
+            controller.abort();
+            done = true;
+            break;
+          }
+          const { value, done: doneReading } = await reader_s.read();
+          done = doneReading;
+          const chunkValue = decoder_s.decode(value);
+          answer_subject += chunkValue;
+        }
+
+        single.name = answer_subject;
+
+        // Saving the conversation name
+        storageUpdateConversation(
+          storageType,
+          { ...single, name: answer_subject },
+          conversations,
+        );
+
+        homeDispatch({
+          field: 'selectedConversation',
+          value: single,
+        });
+        console.log('Changed chat subject to: ' + answer_subject);
+      }
+      else {
+        console.log('Unable to fetch a recommended subject!');
+      }
+    } // end subject recommendation
+
   }
 };

@@ -104,7 +104,6 @@ export const ChatInput = ({
       textareaRef.current.value = libraryPromptText;
       setContent(libraryPromptText);
       handleSend(libraryPromptText);
-      console.log('set prompt to: ' + libraryPromptText);
     }
   }, [libraryPromptText]);
 
@@ -127,8 +126,6 @@ export const ChatInput = ({
     else {
       currentContent = message;
     }
-
-    console.log('currentContent: ' + currentContent);
 
     const messageId = uuidv4();
     onSend(

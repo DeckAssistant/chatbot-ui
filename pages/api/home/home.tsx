@@ -91,6 +91,9 @@ interface Props {
   storageType: StorageType;
 }
 
+// Deliberately making this *outside* the component
+let loaded = false;
+
 const Home = ({
   serverSideApiKeyIsSet,
   serverSidePluginKeysSet,
@@ -435,6 +438,11 @@ const Home = ({
   // ON LOAD --------------------------------------------
 
   useEffect(() => {
+    if(loaded) {
+      return;
+    }
+    loaded = true;
+
     const settings = getSettings();
     if (settings.theme) {
       dispatch({
@@ -449,26 +457,7 @@ const Home = ({
       });
     }
 
-    const apiKey = localStorage.getItem('apiKey');
-
-    if (serverSideApiKeyIsSet) {
-      dispatch({ field: 'apiKey', value: '' });
-
-      localStorage.removeItem('apiKey');
-    } else if (apiKey) {
-      dispatch({ field: 'apiKey', value: apiKey });
-    }
-
-    const pluginKeysRaw = localStorage.getItem('pluginKeys');
-    const pluginKeys: PluginKey[] = pluginKeysRaw
-      ? JSON.parse(pluginKeysRaw)
-      : null;
-    if (serverSidePluginKeysSet) {
-      dispatch({ field: 'pluginKeys', value: [] });
-      localStorage.removeItem('pluginKeys');
-    } else if (pluginKeys) {
-      dispatch({ field: 'pluginKeys', value: pluginKeys });
-    }
+    console.log('onload');
 
     if (window.innerWidth < 640) {
       dispatch({ field: 'showChatbar', value: false });
@@ -538,7 +527,8 @@ const Home = ({
     }
     if(!selectedConversation) {
       // this gets the last conversation
-      selectedConversation = getSelectedConversation();
+      //selectedConversation = getSelectedConversation();
+
     }
     if (selectedConversation) {
       try {
@@ -558,18 +548,7 @@ const Home = ({
       }
       // END DECKASSISTANT EDIT
     } else {
-      dispatch({
-        field: 'selectedConversation',
-        value: {
-          id: uuidv4(),
-          name: 'New conversation',
-          messages: [],
-          model: OpenAIModels[defaultModelId],
-          prompt: DEFAULT_SYSTEM_PROMPT,
-          temperature: DEFAULT_TEMPERATURE,
-          folderId: null,
-        },
-      });
+      handleNewConversation();
     }
   }, [
     defaultModelId,
