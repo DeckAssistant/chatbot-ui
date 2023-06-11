@@ -519,11 +519,9 @@ const Home = ({
     const conversationIdParam = urlSearchParams.get('c');
     var selectedConversation;
     if(conversationIdParam && !selectedConversation) {
-      console.log(conversationIdParam);
       selectedConversation = storageGetConversationById(storageType, conversationIdParam).then((selectedConversation) => {
         try {
-          const parsedSelectedConversation: Conversation =
-          JSON.parse(selectedConversation);
+          const parsedSelectedConversation: Conversation = JSON.parse(selectedConversation);
           const cleanedSelectedConversation = cleanSelectedConversation(
             parsedSelectedConversation,
           );
@@ -539,6 +537,7 @@ const Home = ({
       });
     }
     if(!selectedConversation) {
+      // this gets the last conversation
       selectedConversation = getSelectedConversation();
     }
     if (selectedConversation) {
