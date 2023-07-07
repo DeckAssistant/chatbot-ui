@@ -103,7 +103,7 @@ export const ChatInput = ({
     if(libraryPromptText.length && textareaRef && textareaRef.current) {
       textareaRef.current.value = libraryPromptText;
       setContent(libraryPromptText);
-      handleSend(libraryPromptText);
+      // handleSend(libraryPromptText);
     }
   }, [libraryPromptText]);
 
