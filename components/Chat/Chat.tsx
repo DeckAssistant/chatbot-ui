@@ -32,6 +32,7 @@ import { TemperatureSlider } from './Temperature';
 import { PromptLibraryButton } from './PromptLibraryButton';
 
 import { toPng } from 'html-to-image';
+import { useRouter } from 'next/router';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -57,6 +58,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     dispatch: homeDispatch,
   } = useContext(HomeContext);
 
+  const router = useRouter();
+
   const [currentMessage, setCurrentMessage] = useState<Message>();
   const [autoScrollEnabled, setAutoScrollEnabled] = useState<boolean>(true);
   const [showSettings, setShowSettings] = useState<boolean>(false);
@@ -76,6 +79,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     selectedConversation,
     stopConversationRef,
     storageType,
+    router,
   ]);
 
   const handleEdit = useCallback(editMessageHandler, [
@@ -357,6 +361,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                 conversation,
                 conversations,
                 storageType,
+                router,
                 apiKey,
                 pluginKeys,
                 homeDispatch,

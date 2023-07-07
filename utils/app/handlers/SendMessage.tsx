@@ -1,7 +1,7 @@
 import { MutableRefObject, useContext } from 'react';
 import toast from 'react-hot-toast';
 
-import { storageUpdateConversation } from '@/utils/app/storage/conversation';
+import { storageUpdateConversation, storageCreateConversation } from '@/utils/app/storage/conversation';
 import { storageCreateMessage } from '@/utils/app/storage/message';
 import { saveSelectedConversation } from '@/utils/app/storage/selectedConversation';
 
@@ -12,6 +12,7 @@ import { StorageType } from '@/types/storage';
 import { sendChatRequest } from '../chat';
 
 import { v4 as uuidv4 } from 'uuid';
+import { NextRouter } from 'next/router';
 
 export const sendHandlerFunction = async (
   message: Message,
@@ -20,6 +21,7 @@ export const sendHandlerFunction = async (
   selectedConversation: Conversation | undefined,
   conversations: Conversation[],
   storageType: StorageType,
+  router: NextRouter | undefined,
   apiKey: string,
   pluginKeys: PluginKey[],
   homeDispatch: React.Dispatch<any>,
@@ -32,6 +34,19 @@ export const sendHandlerFunction = async (
     let firstMessage = false;
     if(selectedConversation.messages.length === 0) {
       firstMessage = true;
+
+      conversations = storageCreateConversation(
+        storageType,
+        selectedConversation,
+        conversations,
+      );
+
+      homeDispatch({ field: 'conversations', value: conversations });
+      saveSelectedConversation(selectedConversation);
+
+      if(router) {
+        router.push('/?c=' + selectedConversation.id, undefined, { shallow: true });
+      }
     }
 
     let updatedConversation: Conversation;
