@@ -34,21 +34,6 @@ export const sendHandlerFunction = async (
     let firstMessage = false;
     if(selectedConversation.messages.length === 0) {
       firstMessage = true;
-
-      if(selectedConversation.save_on_first_message === true) {
-        conversations = storageCreateConversation(
-          storageType,
-          selectedConversation,
-          conversations,
-        );
-
-        homeDispatch({ field: 'conversations', value: conversations });
-        saveSelectedConversation(selectedConversation);
-      }
-
-      if(router) {
-        router.push('/?c=' + selectedConversation.id, undefined, { shallow: true });
-      }
     }
 
     let updatedConversation: Conversation;
@@ -164,7 +149,6 @@ export const sendHandlerFunction = async (
         messages: [...updatedConversation.messages, messageSubject],
       };
 
-      setTimeout(async () => {
         const { response: response_subject, controller: controller_subject } = await sendChatRequest(
           tmpConversation,
           plugin,
@@ -208,7 +192,6 @@ export const sendHandlerFunction = async (
         else {
           console.log('Unable to fetch a recommended subject!');
         }
-      }, 500); // delay set at 500 ms
     } // end subject recommendation
 
 

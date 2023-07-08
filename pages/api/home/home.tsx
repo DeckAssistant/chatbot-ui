@@ -266,7 +266,6 @@ const Home = ({
       is_fav: false,
       folderId: (folderId ? folderId : (selectedConversation ? selectedConversation.folderId : null)),
       created_at: new Date(),
-      save_on_first_message: false,
     };
 
     const updatedConversations = storageCreateConversation(
@@ -545,33 +544,7 @@ const Home = ({
       }
       // END DECKASSISTANT EDIT
     } else {
-      const defaultSystemPrompt = systemPrompts.find(
-        (p) => p.id === defaultSystemPromptId,
-      );
-
-      let systemPrompt = DEFAULT_SYSTEM_PROMPT;
-      if (defaultSystemPrompt) {
-        systemPrompt = defaultSystemPrompt.content;
-      }
-
-      const newConversation: Conversation = {
-        id: uuidv4(),
-        name: `${t('New Conversation')}`,
-        messages: [],
-        model: OpenAIModels[defaultModelId],
-        prompt: systemPrompt,
-        temperature: DEFAULT_TEMPERATURE,
-        is_public: false,
-        is_fav: false,
-        folderId: null,
-        created_at: new Date(),
-        save_on_first_message: true,
-      };
-
-      dispatch({
-        field: 'selectedConversation',
-        value: newConversation,
-      });
+      handleNewConversation();
     }
   }, [
     defaultModelId,
