@@ -163,50 +163,54 @@ export const sendHandlerFunction = async (
         ...updatedConversation,
         messages: [...updatedConversation.messages, messageSubject],
       };
-      const { response: response_subject, controller: controller_subject } = await sendChatRequest(
-        tmpConversation,
-        plugin,
-        apiKey,
-        pluginKeys,
-      );
 
-      if (response_subject.ok && response_subject.body) {
-        const reader_s = response_subject.body.getReader();
-        const decoder_s = new TextDecoder();
-        let done = false;
-        let answer_subject = '';
-
-        while (!done) {
-          if (stopConversationRef.current === true) {
-            controller.abort();
-            done = true;
-            break;
-          }
-          const { value, done: doneReading } = await reader_s.read();
-          done = doneReading;
-          const chunkValue = decoder_s.decode(value);
-          answer_subject += chunkValue;
-        }
-
-        single.name = answer_subject;
-
-        // Saving the conversation name
-        storageUpdateConversation(
-          storageType,
-          { ...single, name: answer_subject },
-          conversations,
+      setTimeout(async () => {
+        const { response: response_subject, controller: controller_subject } = await sendChatRequest(
+          tmpConversation,
+          plugin,
+          apiKey,
+          pluginKeys,
         );
 
-        homeDispatch({
-          field: 'selectedConversation',
-          value: single,
-        });
-        console.log('Changed chat subject to: ' + answer_subject);
-      }
-      else {
-        console.log('Unable to fetch a recommended subject!');
-      }
+        if (response_subject.ok && response_subject.body) {
+          const reader_s = response_subject.body.getReader();
+          const decoder_s = new TextDecoder();
+          let done = false;
+          let answer_subject = '';
+
+          while (!done) {
+            if (stopConversationRef.current === true) {
+              controller.abort();
+              done = true;
+              break;
+            }
+            const { value, done: doneReading } = await reader_s.read();
+            done = doneReading;
+            const chunkValue = decoder_s.decode(value);
+            answer_subject += chunkValue;
+          }
+
+          single.name = answer_subject;
+
+          // Saving the conversation name
+          storageUpdateConversation(
+            storageType,
+            { ...single, name: answer_subject },
+            conversations,
+          );
+
+          homeDispatch({
+            field: 'selectedConversation',
+            value: single,
+          });
+          console.log('Changed chat subject to: ' + answer_subject);
+        }
+        else {
+          console.log('Unable to fetch a recommended subject!');
+        }
+      }, 500); // delay set at 500 ms
     } // end subject recommendation
+
 
   }
 };
