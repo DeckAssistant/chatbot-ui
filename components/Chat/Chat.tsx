@@ -1,4 +1,4 @@
-import { IconClearAll, IconSettings } from '@tabler/icons-react';
+import { IconClearAll, IconSettings, IconScreenshot } from '@tabler/icons-react';
 import {
   MutableRefObject,
   memo,
@@ -31,6 +31,9 @@ import { SystemPromptSection } from './SystemPromptSection';
 import { TemperatureSlider } from './Temperature';
 import { PromptLibraryButton } from './PromptLibraryButton';
 
+import { toPng } from 'html-to-image';
+import { useRouter } from 'next/router';
+
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
 }
@@ -55,6 +58,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     dispatch: homeDispatch,
   } = useContext(HomeContext);
 
+  const router = useRouter();
+
   const [currentMessage, setCurrentMessage] = useState<Message>();
   const [autoScrollEnabled, setAutoScrollEnabled] = useState<boolean>(true);
   const [showSettings, setShowSettings] = useState<boolean>(false);
@@ -74,6 +79,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     selectedConversation,
     stopConversationRef,
     storageType,
+    router,
   ]);
 
   const handleEdit = useCallback(editMessageHandler, [
@@ -155,6 +161,28 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     }
   };
   const throttledScrollDown = throttle(scrollDown, 250);
+
+
+  const handleScreenshot = () => {
+    if (chatContainerRef.current === null) {
+      return;
+    }
+
+    chatContainerRef.current.classList.remove('max-h-full');
+    toPng(chatContainerRef.current, { cacheBust: true })
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.download = `${selectedConversation?.name || 'conversation'}.png`;
+        link.href = dataUrl;
+        link.click();
+        if (chatContainerRef.current) {
+          chatContainerRef.current.classList.add('max-h-full');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   // useEffect(() => {
   //   console.log('currentMessage', currentMessage);
@@ -333,6 +361,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                 conversation,
                 conversations,
                 storageType,
+                router,
                 apiKey,
                 pluginKeys,
                 homeDispatch,
@@ -345,6 +374,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                 }
               }
             }
+            onScreenshot={handleScreenshot}
             onRegenerate={(conversation) => {
               if (currentMessage) {
                 handleRegenerate(

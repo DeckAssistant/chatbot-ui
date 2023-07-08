@@ -4,6 +4,8 @@ import {
   IconPencil,
   IconTrash,
   IconX,
+  IconStar,
+  IconStarFilled,
 } from '@tabler/icons-react';
 import {
   DragEvent,
@@ -36,6 +38,7 @@ export const ConversationComponent = ({ conversation }: Props) => {
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [renameValue, setRenameValue] = useState('');
 
   const handleEnterDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -92,6 +95,15 @@ export const ConversationComponent = ({ conversation }: Props) => {
     setIsDeleting(true);
   };
 
+  const handleFavoriteClick = (conversation: Conversation) => {
+    if(conversation) {
+      handleUpdateConversation(conversation, {
+        key: 'is_fav',
+        value: !conversation.is_fav
+      });
+    }
+  };
+
   useEffect(() => {
     if (isRenaming) {
       setIsDeleting(false);
@@ -124,11 +136,22 @@ export const ConversationComponent = ({ conversation }: Props) => {
               : ''
           }`}
           onClick={() => handleSelectConversation(conversation)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           disabled={messageIsStreaming}
           draggable="true"
           onDragStart={(e) => handleDragStart(e, conversation)}
         >
-          <IconMessage size={18} />
+          {conversation.is_fav ? (
+            <span className="text-yellow-500">
+              <IconStarFilled size={18} onClick={() => handleFavoriteClick(conversation)} />
+            </span>
+          ) : isHovered ? (
+            <IconStar size={18} onClick={() => handleFavoriteClick(conversation)} />
+          ) : (
+            <IconMessage size={18} />
+          )}
+
           <div
             className={`relative flex-1 overflow-hidden text-ellipsis whitespace-nowrap break-all text-left text-[12.5px] ${
               selectedConversation?.id === conversation.id ? 'pr-12 max-h-8 leading-4' : 'pr-1 max-h-5 leading-3'

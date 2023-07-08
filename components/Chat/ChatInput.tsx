@@ -6,6 +6,7 @@ import {
   IconPlayerStop,
   IconRepeat,
   IconSend,
+  IconCamera,
 } from '@tabler/icons-react';
 import {
   KeyboardEvent,
@@ -41,6 +42,7 @@ interface Props {
   onRegenerate: (conversation: Conversation | undefined) => void;
   onShareChat: (conversation: Conversation | undefined) => void;
   onScrollDownClick: () => void;
+  onScreenshot: () => void;
   stopConversationRef: MutableRefObject<boolean>;
   textareaRef: MutableRefObject<HTMLTextAreaElement | null>;
   showScrollDownButton: boolean;
@@ -52,6 +54,7 @@ export const ChatInput = ({
   onRegenerate,
   onShareChat,
   onScrollDownClick,
+  onScreenshot,
   stopConversationRef,
   textareaRef,
   showScrollDownButton,
@@ -103,7 +106,7 @@ export const ChatInput = ({
     if(libraryPromptText.length && textareaRef && textareaRef.current) {
       textareaRef.current.value = libraryPromptText;
       setContent(libraryPromptText);
-      handleSend(libraryPromptText);
+      // handleSend(libraryPromptText);
     }
   }, [libraryPromptText]);
 
@@ -351,6 +354,13 @@ export const ChatInput = ({
           </div>
 
           <div className="relative mx-auto mb-3 flex items-right gap-2 md:mb-2 md:mt-2 w-1/3 justify-end w-1/3">
+
+            <button className="flex w-fit items-center gap-3 rounded border border-neutral-200 bg-white py-2 px-4 text-black hover:opacity-50 dark:border-neutral-600 dark:bg-[#343541] dark:text-white"
+                onClick={onScreenshot}
+             >
+              <IconCamera size={16} />
+            </button>
+
             <ShareButton
               onShareClicked={handleShareChat}
             />

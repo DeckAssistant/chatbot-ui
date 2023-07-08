@@ -92,6 +92,9 @@ export class RDBMSConversation {
 
   @Column({ default: false })
   is_public!: boolean;
+
+  @Column({ default: false })
+  is_fav!: boolean;
 }
 
 

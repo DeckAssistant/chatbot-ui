@@ -268,6 +268,7 @@ const Home = ({
       prompt: systemPrompt,
       temperature: DEFAULT_TEMPERATURE,
       is_public: false,
+      is_fav: false,
       folderId: (folderId ? folderId : (selectedConversation ? selectedConversation.folderId : null)),
       created_at: new Date(),
     };
@@ -548,7 +549,38 @@ const Home = ({
       }
       // END DECKASSISTANT EDIT
     } else {
-      handleNewConversation();
+      const defaultSystemPrompt = systemPrompts.find(
+        (p) => p.id === defaultSystemPromptId,
+      );
+
+      let systemPrompt = DEFAULT_SYSTEM_PROMPT;
+      if (defaultSystemPrompt) {
+        systemPrompt = defaultSystemPrompt.content;
+      }
+
+      const newConversation: Conversation = {
+        id: uuidv4(),
+        name: `${t('New Conversation')}`,
+        messages: [],
+        model: {
+          id: OpenAIModels[defaultModelId].id,
+          name: OpenAIModels[defaultModelId].name,
+          maxLength: OpenAIModels[defaultModelId].maxLength,
+          tokenLimit: OpenAIModels[defaultModelId].tokenLimit,
+          requestLimit: OpenAIModels[defaultModelId].requestLimit,
+        },
+        prompt: systemPrompt,
+        temperature: DEFAULT_TEMPERATURE,
+        is_public: false,
+        is_fav: false,
+        folderId: null,
+        created_at: new Date(),
+      };
+
+      dispatch({
+        field: 'selectedConversation',
+        value: newConversation,
+      });
     }
   }, [
     defaultModelId,

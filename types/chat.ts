@@ -25,5 +25,6 @@ export interface Conversation {
   temperature: number;
   folderId: string | null;
   is_public: boolean;
+  is_fav: boolean;
   created_at: Date;
 }

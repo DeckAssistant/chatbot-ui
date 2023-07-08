@@ -70,6 +70,18 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
     maxAge: 3 * 24 * 60 * 60,
   },
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      const customProfile = profile as any;
+      if(!customProfile) {
+        return false;
+      }
+      if(customProfile['is_subscribed'] == true) {
+        return true;
+      }
+      return process.env.CUSTOM_OAUTH_URL + '/pricing?expired=true';
+    }
+  }
 };
 
 export default NextAuth(authOptions);
