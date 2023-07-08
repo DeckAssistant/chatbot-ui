@@ -266,6 +266,7 @@ const Home = ({
       is_fav: false,
       folderId: (folderId ? folderId : (selectedConversation ? selectedConversation.folderId : null)),
       created_at: new Date(),
+      save_on_first_message: false,
     };
 
     const updatedConversations = storageCreateConversation(
@@ -564,6 +565,7 @@ const Home = ({
         is_fav: false,
         folderId: null,
         created_at: new Date(),
+        save_on_first_message: true,
       };
 
       dispatch({

@@ -27,4 +27,5 @@ export interface Conversation {
   is_public: boolean;
   is_fav: boolean;
   created_at: Date;
+  save_on_first_message?: boolean | false;
 }

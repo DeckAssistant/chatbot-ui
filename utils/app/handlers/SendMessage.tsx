@@ -35,14 +35,16 @@ export const sendHandlerFunction = async (
     if(selectedConversation.messages.length === 0) {
       firstMessage = true;
 
-      conversations = storageCreateConversation(
-        storageType,
-        selectedConversation,
-        conversations,
-      );
+      if(selectedConversation.save_on_first_message === true) {
+        conversations = storageCreateConversation(
+          storageType,
+          selectedConversation,
+          conversations,
+        );
 
-      homeDispatch({ field: 'conversations', value: conversations });
-      saveSelectedConversation(selectedConversation);
+        homeDispatch({ field: 'conversations', value: conversations });
+        saveSelectedConversation(selectedConversation);
+      }
 
       if(router) {
         router.push('/?c=' + selectedConversation.id, undefined, { shallow: true });
