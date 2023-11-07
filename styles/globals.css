@@ -41,3 +41,7 @@ html {
 pre:has(div.codeblock) {
   padding: 0;
 }
+
+input[type='radio']:checked + label {
+  @apply bg-red-500;
+}

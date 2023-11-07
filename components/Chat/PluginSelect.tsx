@@ -1,8 +1,9 @@
-import { FC, useEffect, useRef } from 'react';
+import { IconBrandGoogle, IconBrush, IconRobot } from '@tabler/icons-react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import { useTranslation } from 'next-i18next';
 
-import { Plugin, PluginList } from '@/types/plugin';
+import { Plugin, PluginID, PluginList } from '@/types/plugin';
 
 interface Props {
   plugin: Plugin | null;
@@ -10,92 +11,76 @@ interface Props {
   onKeyDown: (e: React.KeyboardEvent<HTMLSelectElement>) => void;
 }
 
-export const PluginSelect: FC<Props> = ({
-  plugin,
-  onPluginChange,
-  onKeyDown,
-}) => {
-  const { t } = useTranslation('chat');
-
-  const selectRef = useRef<HTMLSelectElement>(null);
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => {
-    const selectElement = selectRef.current;
-    const optionCount = selectElement?.options.length || 0;
-
-    if (e.key === '/' && e.metaKey) {
-      e.preventDefault();
-      if (selectElement) {
-        selectElement.selectedIndex =
-          (selectElement.selectedIndex + 1) % optionCount;
-        selectElement.dispatchEvent(new Event('change'));
-      }
-    } else if (e.key === '/' && e.shiftKey && e.metaKey) {
-      e.preventDefault();
-      if (selectElement) {
-        selectElement.selectedIndex =
-          (selectElement.selectedIndex - 1 + optionCount) % optionCount;
-        selectElement.dispatchEvent(new Event('change'));
-      }
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (selectElement) {
-        selectElement.dispatchEvent(new Event('change'));
-      }
-
-      onPluginChange(
-        PluginList.find(
-          (plugin) =>
-            plugin.name === selectElement?.selectedOptions[0].innerText,
-        ) as Plugin,
-      );
+export const PluginSelect: FC<Props> = ({ plugin, onPluginChange }) => {
+  useEffect(() => {
+    if (plugin) {
+      setActiveButton(plugin.id);
     } else {
-      onKeyDown(e);
+      setActiveButton('chatgpt');
     }
+  }, [plugin]);
+
+  const [activeButton, setActiveButton] = useState('');
+
+  const handleButtonClick = (id: any) => {
+    setActiveButton(id);
+    onPluginChange(PluginList.find((plugin) => plugin.id === id) as Plugin);
   };
 
-  useEffect(() => {
-    if (selectRef.current) {
-      selectRef.current.focus();
-    }
-  }, []);
-
   return (
-      <div className="rounded border pr-2 rounded border border-neutral-200 bg-white text-black hover:opacity-50 dark:border-neutral-600 dark:bg-[#343541] dark:text-white">
-        <select
-          ref={selectRef}
-          className="w-full cursor-pointer bg-transparent p-2"
-          placeholder={t('Select a plugin') || ''}
-          value={plugin?.id || ''}
-          onChange={(e) => {
-            onPluginChange(
-              PluginList.find(
-                (plugin) => plugin.id === e.target.value,
-              ) as Plugin,
-            );
-          }}
-          onKeyDown={(e) => {
-            handleKeyDown(e);
-          }}
-        >
-          <option
-            key="chatgpt"
-            value="chatgpt"
-            className="dark:bg-[#343541] dark:text-white"
+    <div>
+      <div className="inline-flex rounded-md shadow-sm" role="group">
+        <div className="group relative flex justify-center">
+          <button
+            type="button"
+            className={`inline-flex items-center px-4 py-2 text-sm font-medium flex w-fit gap-3 rounded-l border border-neutral-600 text-black hover:opacity-50 text-white ${
+              activeButton === 'chatgpt' ? 'bg-neutral-500' : 'bg-[#343541]'
+            }`}
+            id="chatgpt"
+            onClick={() => handleButtonClick('chatgpt')}
           >
-            ChatGPT
-          </option>
+            <IconRobot size={24} />
+          </button>
+          <span className="absolute bottom-14 scale-0 transition-all rounded bg-gray-800 p-4 text-center text-xs text-white group-hover:scale-100 w-36">
+            Talk to ChatGPT 🤖
+          </span>
+        </div>
 
-          {PluginList.map((plugin) => (
-            <option
-              key={plugin.id}
-              value={plugin.id}
-              className="dark:bg-[#343541] dark:text-white"
-            >
-              {plugin.name}
-            </option>
-          ))}
-        </select>
+        <div className="group relative flex justify-center">
+          <button
+            type="button"
+            className={`inline-flex items-center px-4 py-2 text-sm font-medium flex w-fit gap-3 rounded-l border border-neutral-600 text-black hover:opacity-50 text-white ${
+              activeButton === PluginID.GOOGLE_SEARCH
+                ? 'bg-neutral-500'
+                : 'bg-[#343541]'
+            }`}
+            id="${PluginID.GOOGLE_SEARCH}"
+            onClick={() => handleButtonClick(PluginID.GOOGLE_SEARCH)}
+          >
+            <IconBrandGoogle size={24} />
+          </button>
+          <span className="absolute bottom-14 scale-0 transition-all rounded bg-gray-800 p-4 text-center text-xs text-white group-hover:scale-100 w-40">
+            Google something 🔎
+          </span>
+        </div>
+        <div className="group relative flex justify-center">
+          <button
+            type="button"
+            className={`inline-flex items-center px-4 py-2 text-sm font-medium flex w-fit gap-3 rounded-l border border-neutral-600 text-black hover:opacity-50 text-white ${
+              activeButton === PluginID.DALLE3
+                ? 'bg-neutral-500'
+                : 'bg-[#343541]'
+            }`}
+            id="${PluginID.DALLE3}"
+            onClick={() => handleButtonClick(PluginID.DALLE3)}
+          >
+            <IconBrush size={24} />
+          </button>
+          <span className="absolute bottom-14 scale-0 transition-all rounded bg-gray-800 p-4 text-center text-xs text-white group-hover:scale-100 w-48">
+            Generate stunning images with DALL-E 3 🖌️
+          </span>
+        </div>
       </div>
+    </div>
   );
 };
