@@ -26,8 +26,11 @@ async function storeFileLocally(url: string): Promise<string> {
 }
 
 const getUrlFileExtension = (url: string) => {
-  const u = new URL(url)
-  const ext = u.pathname.split(".").pop()
+  const u = new URL(url);
+  const ext = u.pathname.split(".").pop();
+  if(!ext) {
+    return "";
+  }
   return ext === "/" ? undefined : ext.toLowerCase()
 }
 
@@ -50,9 +53,9 @@ const dalleImageGeneration = async (
 
   let dalleInput = {
     prompt: prompt,
-    model: 'dall-e-3',
-    size: "1024x1024",
-    response_format: "url",
+    model: `dall-e-3`,
+    size: `1024x1024` as const,
+    response_format: `url` as const,
   };
 
   console.log('Generating image with prompt:', prompt);
@@ -74,10 +77,10 @@ const dalleImageGeneration = async (
 
   const s3 = new S3Client({
     region: 'auto',
-    endpoint: `https://f14e33850a4ed9dc214dae69d72f41c3.r2.cloudflarestorage.com`, //https://${ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    endpoint: `https://${process.env.OPENAI_API_KEY}.r2.cloudflarestorage.com`,
     credentials: {
-      accessKeyId: '6fc3e8c7057b26c55839aa55de1dab74',
-      secretAccessKey: 'cba17f569fc840a3232165f3ef154b67bab0ddc4db7bf91a1e3df830afb6c565',
+      accessKeyId: `${process.env.CLOUDFLARE_ACCESS_KEY}`,
+      secretAccessKey: `${process.env.CLOUDFLARE_SECRET_ACCESS_KEY}`,
     },
   });
 
@@ -86,6 +89,8 @@ const dalleImageGeneration = async (
   for(let i = 0; i < image.data.length; i++) {
     const responseData = image.data[i];
     let imageURL = responseData.url;
+
+    if(!imageURL) { continue; }
 
     // Download the image
     const tmpFilePath = await storeFileLocally(imageURL);
