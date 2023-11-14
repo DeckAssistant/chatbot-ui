@@ -1,4 +1,8 @@
-import { IconClearAll, IconSettings, IconScreenshot } from '@tabler/icons-react';
+import {
+  IconClearAll,
+  IconScreenshot,
+  IconSettings,
+} from '@tabler/icons-react';
 import {
   MutableRefObject,
   memo,
@@ -10,6 +14,7 @@ import {
 } from 'react';
 
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 
 import { editMessageHandler } from '@/utils/app/handlers/EditMessage';
 import { regenerateMessageHandler } from '@/utils/app/handlers/RegenerateMessage';
@@ -27,12 +32,11 @@ import { ChatLoader } from './ChatLoader';
 import { ErrorMessageDiv } from './ErrorMessageDiv';
 import { MemoizedChatMessage } from './MemoizedChatMessage';
 import { ModelSelect } from './ModelSelect';
+import { PromptLibraryButton } from './PromptLibraryButton';
 import { SystemPromptSection } from './SystemPromptSection';
 import { TemperatureSlider } from './Temperature';
-import { PromptLibraryButton } from './PromptLibraryButton';
 
 import { toPng } from 'html-to-image';
-import { useRouter } from 'next/router';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -162,7 +166,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   };
   const throttledScrollDown = throttle(scrollDown, 250);
 
-
   const handleScreenshot = () => {
     if (chatContainerRef.current === null) {
       return;
@@ -221,7 +224,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     };
   }, [messagesEndRef]);
 
-
   const handleUsePromptFromLibrary = (message: string) => {
     setLibraryPromptText(message);
   };
@@ -247,74 +249,36 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                       </div>
                     ) : (
                       <>
-                      <div className="mb-4">
-                        <span className="inline-block">Deck</span><span className="inline-block bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Assistant</span>
-                      </div>
+                        <div className="mb-4">
+                          <span className="inline-block">Deck</span>
+                          <span className="inline-block bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                            Assistant
+                          </span>
+                        </div>
 
-                      <div className="text-center text-base text-black dark:text-white ">
-                        <p className="mb-2">
-                          Welcome to the DeckAssistant Chatbot. This is an enhanced ChatGPT interface.
-                        </p>
-                        <p className="mb-8">
-                          Start your conversation below, or pick a starting prompt from the prompt library.
-                        </p>
-                      </div>
+                        <div className="text-center text-base text-black dark:text-white ">
+                          <p className="mb-2">
+                            Welcome to the DeckAssistant Chatbot. This is an
+                            enhanced ChatGPT interface.
+                          </p>
+                          <p className="mb-8">
+                            Start your conversation below, or pick a starting
+                            prompt from the prompt library.
+                          </p>
+                        </div>
 
-                      <div className="flex mb-4 items-center justify-center">
-                        <PromptLibraryButton onUsePromptFromLibrary={handleUsePromptFromLibrary} />
-                      </div>
-
+                        <div className="flex mb-4 items-center justify-center">
+                          <PromptLibraryButton
+                            onUsePromptFromLibrary={handleUsePromptFromLibrary}
+                          />
+                        </div>
                       </>
                     )}
                   </div>
-
-                  {/*DECKASSISTANT EDIT
-                  {models.length > 0 && (
-                     <div className="flex h-full flex-col space-y-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-600">
-                      <ModelSelect />
-
-                      <SystemPromptSection systemPrompts={systemPrompts} />
-
-                      <TemperatureSlider
-                        label={t('Temperature')}
-                        onChangeTemperature={(temperature) =>
-                          handleUpdateConversation(selectedConversation, {
-                            key: 'temperature',
-                            value: temperature,
-                          })
-                        }
-                      />
-                    </div>
-                  )}*/}
                 </div>
               </>
             ) : (
               <>
-                {/* DECKASSISTANT EDIT
-                <div className="sticky top-0 z-10 flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
-                  {t('Model')}: {selectedConversation?.model.name} | {t('Temp')}
-                  : {selectedConversation?.temperature} |
-                  <button
-                    className="ml-2 cursor-pointer hover:opacity-50"
-                    onClick={handleSettings}
-                  >
-                    <IconSettings size={18} />
-                  </button>
-                  <button
-                    className="ml-2 cursor-pointer hover:opacity-50"
-                    onClick={onClearAll}
-                  >
-                    <IconClearAll size={18} />
-                  </button>
-                </div>
-                {showSettings && (
-                  <div className="flex flex-col space-y-10 md:mx-auto md:max-w-xl md:gap-6 md:py-3 md:pt-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
-                    <div className="flex h-full flex-col space-y-4 border-b border-neutral-200 p-4 dark:border-neutral-600 md:rounded-lg md:border">
-                      <ModelSelect />
-                    </div>
-                  </div>
-                )}*/}
-
                 {selectedConversation?.messages.map((message, index) => (
                   <MemoizedChatMessage
                     key={index}
@@ -369,11 +333,15 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             }}
             onScrollDownClick={handleScrollDown}
             onShareChat={(conversation) => {
-                if(conversation) {
-                  handleShareChat(conversation, storageType, !conversation?.is_public, homeDispatch);
-                }
+              if (conversation) {
+                handleShareChat(
+                  conversation,
+                  storageType,
+                  !conversation?.is_public,
+                  homeDispatch,
+                );
               }
-            }
+            }}
             onScreenshot={handleScreenshot}
             onRegenerate={(conversation) => {
               if (currentMessage) {

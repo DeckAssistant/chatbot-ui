@@ -29,6 +29,25 @@ export interface Props {
   onEdit?: (conversation: Conversation, editedMessage: Message) => void;
 }
 
+interface DalleImgProps {
+  imageUrl: string;
+  promptText: string;
+}
+function DalleImg({ imageUrl, promptText }: DalleImgProps) {
+  imageUrl = 'https://' + imageUrl;
+  return (
+    <span>
+      {promptText}
+      <a href={imageUrl} target="_blank">
+        <img src={imageUrl} alt="" className="m-0 mt-2 mb-2" />
+        <button className="cursor-pointer select-none items-center rounded-md border border-white/20 p-2 text-white text-xs transition-colors duration-200 hover:bg-gray-500/10">
+          Download
+        </button>
+      </a>
+    </span>
+  );
+}
+
 export const ChatMessage: FC<Props> = memo(
   ({ message, messageIndex, onEdit }) => {
     const { t } = useTranslation('chat');
@@ -139,7 +158,9 @@ export const ChatMessage: FC<Props> = memo(
     return (
       <div
         className={`group md:px-4 ${
-          (messageIndex == (selectedConversation?.messages.length ?? 0) - 1) ? 'pb-8' : ''
+          messageIndex == (selectedConversation?.messages.length ?? 0) - 1
+            ? 'pb-8'
+            : ''
         }
         ${
           message.role === 'assistant'
@@ -231,6 +252,23 @@ export const ChatMessage: FC<Props> = memo(
                   components={{
                     code({ node, inline, className, children, ...props }) {
                       if (children.length) {
+                        const codeContent = children[0]?.toString() || '';
+
+                        if (codeContent) {
+                          const regex = /\[DALLE\]\(https\:\/\/(.+)\:(.+)\)/;
+                          const match = codeContent.match(regex);
+
+                          if (match) {
+                            console.log(match);
+                            const imageUrl = match[1];
+                            const text = match[2];
+
+                            return (
+                              <DalleImg imageUrl={imageUrl} promptText={text} />
+                            );
+                          }
+                        }
+
                         if (children[0] == '▍') {
                           return (
                             <span className="animate-pulse cursor-default mt-1">

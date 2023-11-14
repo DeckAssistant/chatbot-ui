@@ -13,10 +13,12 @@ export interface PluginKey {
 
 export enum PluginID {
   GOOGLE_SEARCH = 'google-search',
+  DALLE3 = 'dalle-3',
 }
 
 export enum PluginName {
   GOOGLE_SEARCH = 'Google Search',
+  DALLE3 = 'DALL-E 3',
 }
 
 export const Plugins: Record<PluginID, Plugin> = {
@@ -33,6 +35,11 @@ export const Plugins: Record<PluginID, Plugin> = {
         value: '',
       },
     ],
+  },
+  [PluginID.DALLE3]: {
+    id: PluginID.DALLE3,
+    name: PluginName.DALLE3,
+    requiredKeys: [],
   },
 };
 

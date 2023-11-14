@@ -1,7 +1,12 @@
 import { MutableRefObject, useContext } from 'react';
 import toast from 'react-hot-toast';
 
-import { storageUpdateConversation, storageCreateConversation } from '@/utils/app/storage/conversation';
+import { NextRouter } from 'next/router';
+
+import {
+  storageCreateConversation,
+  storageUpdateConversation,
+} from '@/utils/app/storage/conversation';
 import { storageCreateMessage } from '@/utils/app/storage/message';
 import { saveSelectedConversation } from '@/utils/app/storage/selectedConversation';
 
@@ -12,7 +17,6 @@ import { StorageType } from '@/types/storage';
 import { sendChatRequest } from '../chat';
 
 import { v4 as uuidv4 } from 'uuid';
-import { NextRouter } from 'next/router';
 
 export const sendHandlerFunction = async (
   message: Message,
@@ -32,7 +36,7 @@ export const sendHandlerFunction = async (
 
     // new conversation, create it first
     let firstMessage = false;
-    if(selectedConversation.messages.length === 0) {
+    if (selectedConversation.messages.length === 0) {
       firstMessage = true;
     }
 
@@ -55,6 +59,9 @@ export const sendHandlerFunction = async (
       message,
       conversations,
     );
+
+    console.log('sendHandlerFunction plugin:');
+    console.log(plugin);
 
     const { response, controller } = await sendChatRequest(
       updatedConversation,
@@ -111,7 +118,8 @@ export const sendHandlerFunction = async (
       }
 
       updatedConversation.messages.pop();
-    } else {
+    } // end if (!plugin)
+    else {
       const { answer } = await response.json();
       responseMessage.content = answer;
     }
@@ -136,25 +144,39 @@ export const sendHandlerFunction = async (
     saveSelectedConversation(single);
 
     // get a recommended title for the conversation
-    if(firstMessage === true) {
-      console.log('Getting recommended subject..');
-      const messageSubject: Message = {
-        id: uuidv4(),
-        role: 'user',
-        content: 'What would be a short and relevant title for this chat? You must strictly answer with only the title, no other text is allowed.'
-      };
+    if (firstMessage === true) {
+      // when using a plugin (dalle or google), pick the first message as the title
+      if (plugin) {
+        const { content } = message;
+        const customName =
+          content.length > 30 ? content.substring(0, 30) + '...' : content;
+        updatedConversation = {
+          ...updatedConversation,
+          name: customName,
+        };
 
-      var tmpConversation = {
-        ...updatedConversation,
-        messages: [...updatedConversation.messages, messageSubject],
-      };
-
-        const { response: response_subject, controller: controller_subject } = await sendChatRequest(
-          tmpConversation,
-          plugin,
-          apiKey,
-          pluginKeys,
+        // Saving the conversation name
+        storageUpdateConversation(
+          storageType,
+          { ...selectedConversation, name: updatedConversation.name },
+          conversations,
         );
+      } else {
+        console.log('Getting recommended subject..');
+        const messageSubject: Message = {
+          id: uuidv4(),
+          role: 'user',
+          content:
+            'What would be a short and relevant title for this chat? You must strictly answer with only the title, no other text is allowed.',
+        };
+
+        var tmpConversation = {
+          ...updatedConversation,
+          messages: [...updatedConversation.messages, messageSubject],
+        };
+
+        const { response: response_subject, controller: controller_subject } =
+          await sendChatRequest(tmpConversation, plugin, apiKey, pluginKeys);
 
         if (response_subject.ok && response_subject.body) {
           const reader_s = response_subject.body.getReader();
@@ -188,12 +210,10 @@ export const sendHandlerFunction = async (
             value: single,
           });
           console.log('Changed chat subject to: ' + answer_subject);
-        }
-        else {
+        } else {
           console.log('Unable to fetch a recommended subject!');
         }
-    } // end subject recommendation
-
-
+      } // end subject recommendation
+    } // end if(firstMessage === true) else
   }
 };
