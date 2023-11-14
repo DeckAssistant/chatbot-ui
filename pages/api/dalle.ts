@@ -14,15 +14,15 @@ import { extname } from 'path';
 import { writeFileSync } from 'fs';
 
 async function storeFileLocally(url: string): Promise<string> {
-    const response = await fetch(url);
-    const buffer = await response.arrayBuffer();
-    const data = Buffer.from(buffer);
+  const response = await fetch(url);
+  const buffer = await response.arrayBuffer();
+  const data = Buffer.from(buffer);
 
-    const path = `/tmp/${randomstring.generate(20)}.${getUrlFileExtension(url)}`;
+  const path = `/tmp/${randomstring.generate(20)}.${getUrlFileExtension(url)}`;
 
-    writeFileSync(path, data);
+  writeFileSync(path, data);
 
-    return path;
+  return path;
 }
 
 const getUrlFileExtension = (url: string) => {
@@ -77,7 +77,7 @@ const dalleImageGeneration = async (
 
   const s3 = new S3Client({
     region: 'auto',
-    endpoint: `https://${process.env.OPENAI_API_KEY}.r2.cloudflarestorage.com`,
+    endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
     credentials: {
       accessKeyId: `${process.env.CLOUDFLARE_ACCESS_KEY}`,
       secretAccessKey: `${process.env.CLOUDFLARE_SECRET_ACCESS_KEY}`,
