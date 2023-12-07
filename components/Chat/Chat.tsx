@@ -243,37 +243,31 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               <>
                 <div className="mx-auto flex flex-col space-y-5 md:space-y-10 px-3 pt-5 md:pt-12 sm:max-w-[700px]">
                   <div className="text-center text-3xl font-semibold text-gray-800 dark:text-gray-100">
-                    {models.length === 0 ? (
-                      <div>
-                        <Spinner size="16px" className="mx-auto" />
+                    <>
+                      <div className="mb-4">
+                        <span className="inline-block">Deck</span>
+                        <span className="inline-block bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                          Assistant
+                        </span>
                       </div>
-                    ) : (
-                      <>
-                        <div className="mb-4">
-                          <span className="inline-block">Deck</span>
-                          <span className="inline-block bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                            Assistant
-                          </span>
-                        </div>
 
-                        <div className="text-center text-base text-black dark:text-white ">
-                          <p className="mb-2">
-                            Welcome to the DeckAssistant Chatbot. This is an
-                            enhanced ChatGPT interface.
-                          </p>
-                          <p className="mb-8">
-                            Start your conversation below, or pick a starting
-                            prompt from the prompt library.
-                          </p>
-                        </div>
+                      <div className="text-center text-base text-black dark:text-white ">
+                        <p className="mb-2">
+                          Welcome to the DeckAssistant Chatbot. This is an
+                          enhanced ChatGPT interface.
+                        </p>
+                        <p className="mb-8">
+                          Start your conversation below, or pick a starting
+                          prompt from the prompt library.
+                        </p>
+                      </div>
 
-                        <div className="flex mb-4 items-center justify-center">
-                          <PromptLibraryButton
-                            onUsePromptFromLibrary={handleUsePromptFromLibrary}
-                          />
-                        </div>
-                      </>
-                    )}
+                      <div className="flex mb-4 items-center justify-center">
+                        <PromptLibraryButton
+                          onUsePromptFromLibrary={handleUsePromptFromLibrary}
+                        />
+                      </div>
+                    </>
                   </div>
                 </div>
               </>

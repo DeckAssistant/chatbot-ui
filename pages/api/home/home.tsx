@@ -5,6 +5,11 @@ import { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+// DECKASSISTANT EDIT
+import { useRouter } from 'next/router';
+import Script from 'next/script';
 
 import { useCreateReducer } from '@/hooks/useCreateReducer';
 
@@ -22,8 +27,8 @@ import {
 } from '@/utils/app/const';
 import {
   storageCreateConversation,
-  storageUpdateConversation,
   storageGetConversationById,
+  storageUpdateConversation,
 } from '@/utils/app/storage/conversation';
 import {
   storageGetConversations,
@@ -78,11 +83,6 @@ import { HomeInitialState, initialState } from './home.state';
 import { v4 as uuidv4 } from 'uuid';
 
 // DECKASSISTANT EDIT
-import { useRouter } from 'next/router';
-import Script from 'next/script'
-import Link from 'next/link';
-import Image from 'next/image';
-// DECKASSISTANT EDIT
 
 interface Props {
   serverSideApiKeyIsSet: boolean;
@@ -130,21 +130,21 @@ const Home = ({
 
   // DECKASSISTANT KEYBOARD SHORTCUT
   useEffect(() => {
-    const handleKeyDown = (event : any) => {
-      if (event.ctrlKey && event.altKey && event.key === "n") {
+    const handleKeyDown = (event: any) => {
+      if (event.ctrlKey && event.altKey && event.key === 'n') {
         handleNewConversation();
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
   // END DECKASSISTANT KEYBOARD SHORTCUT
 
-  const { data, error, refetch } = useQuery(
+  /*const { data, error, refetch } = useQuery(
     ['GetModels', apiKey, serverSideApiKeyIsSet],
     ({ signal }) => {
       if (!apiKey && !serverSideApiKeyIsSet) return null;
@@ -165,7 +165,7 @@ const Home = ({
 
   useEffect(() => {
     dispatch({ field: 'modelError', value: getModelsError(error) });
-  }, [dispatch, error, getModelsError]);
+  }, [dispatch, error, getModelsError]);*/
 
   // FETCH MODELS ----------------------------------------------
 
@@ -243,7 +243,7 @@ const Home = ({
 
   // CONVERSATION OPERATIONS  --------------------------------------------
 
-  const handleNewConversation = async (folderId: string = "") => {
+  const handleNewConversation = async (folderId: string = '') => {
     const lastConversation = conversations[conversations.length - 1];
 
     const defaultSystemPrompt = systemPrompts.find(
@@ -264,7 +264,11 @@ const Home = ({
       temperature: DEFAULT_TEMPERATURE,
       is_public: false,
       is_fav: false,
-      folderId: (folderId ? folderId : (selectedConversation ? selectedConversation.folderId : null)),
+      folderId: folderId
+        ? folderId
+        : selectedConversation
+        ? selectedConversation.folderId
+        : null,
       created_at: new Date(),
     };
 
@@ -287,9 +291,7 @@ const Home = ({
   };
 
   // DECKASSISTANT EDIT
-  const handleNewConversationInFolder = (
-    folderId : string
-  ) => {
+  const handleNewConversationInFolder = (folderId: string) => {
     handleNewConversation(folderId);
   };
   // END DECKASSISTANT EDIT
@@ -434,7 +436,7 @@ const Home = ({
   // ON LOAD --------------------------------------------
 
   useEffect(() => {
-    if(loaded) {
+    if (loaded) {
       return;
     }
     loaded = true;
@@ -503,10 +505,14 @@ const Home = ({
     const urlSearchParams = new URLSearchParams(window.location.search);
     const conversationIdParam = urlSearchParams.get('c');
     var selectedConversation;
-    if(conversationIdParam && !selectedConversation) {
-      selectedConversation = storageGetConversationById(storageType, conversationIdParam).then((selectedConversation) => {
+    if (conversationIdParam && !selectedConversation) {
+      selectedConversation = storageGetConversationById(
+        storageType,
+        conversationIdParam,
+      ).then((selectedConversation) => {
         try {
-          const parsedSelectedConversation: Conversation = JSON.parse(selectedConversation);
+          const parsedSelectedConversation: Conversation =
+            JSON.parse(selectedConversation);
           const cleanedSelectedConversation = cleanSelectedConversation(
             parsedSelectedConversation,
           );
@@ -515,21 +521,18 @@ const Home = ({
             field: 'selectedConversation',
             value: cleanedSelectedConversation,
           });
-        }
-        catch(e) {
-
-        }
+        } catch (e) {}
       });
     }
-    if(!selectedConversation) {
+    if (!selectedConversation) {
       // this gets the last conversation
       //selectedConversation = getSelectedConversation();
-
     }
     if (selectedConversation) {
       try {
-        const parsedSelectedConversation: Conversation =
-          JSON.parse(String(selectedConversation));
+        const parsedSelectedConversation: Conversation = JSON.parse(
+          String(selectedConversation),
+        );
         const cleanedSelectedConversation = cleanSelectedConversation(
           parsedSelectedConversation,
         );
@@ -538,10 +541,7 @@ const Home = ({
           field: 'selectedConversation',
           value: cleanedSelectedConversation,
         });
-      }
-      catch(e) {
-
-      }
+      } catch (e) {}
       // END DECKASSISTANT EDIT
     } else {
       handleNewConversation();
@@ -571,80 +571,123 @@ const Home = ({
       }}
     >
       <Head>
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="DeckAssistant - Chatbot UI"></meta>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-title"
+          content="DeckAssistant - Chatbot UI"
+        ></meta>
         <title>DeckAssistant - Chatbot UI</title>
-        <meta name="title" content="DeckAssistant - AI Assistant for Stream Deck"/>
-        <meta name="description" content="Stream Deck plugin that puts A.I. at your fingertips. Literally."/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="DeckAssistant - AI Assistant for Stream Deck"/>
-        <meta property="og:description" content="Stream Deck plugin that puts A.I. at your fingertips. Literally."/>
-        <meta property="og:image" content="https://deckassistant.io/images/poster.png"/>
-        <meta property="twitter:card" content="summary_large_image"/>
-        <meta property="twitter:title" content="DeckAssistant - AI Assistant for Stream Deck"/>
-        <meta property="twitter:description" content="Stream Deck plugin that puts A.I. at your fingertips. Literally."/>
-        <meta property="twitter:image" content="https://deckassistant.io/images/poster.png"/>
+        <meta
+          name="title"
+          content="DeckAssistant - AI Assistant for Stream Deck"
+        />
+        <meta
+          name="description"
+          content="Stream Deck plugin that puts A.I. at your fingertips. Literally."
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content="DeckAssistant - AI Assistant for Stream Deck"
+        />
+        <meta
+          property="og:description"
+          content="Stream Deck plugin that puts A.I. at your fingertips. Literally."
+        />
+        <meta
+          property="og:image"
+          content="https://deckassistant.io/images/poster.png"
+        />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta
+          property="twitter:title"
+          content="DeckAssistant - AI Assistant for Stream Deck"
+        />
+        <meta
+          property="twitter:description"
+          content="Stream Deck plugin that puts A.I. at your fingertips. Literally."
+        />
+        <meta
+          property="twitter:image"
+          content="https://deckassistant.io/images/poster.png"
+        />
         <meta
           name="viewport"
           content="height=device-height ,width=device-width, initial-scale=1, user-scalable=no"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Script defer data-domain="chat.deckassistant.io" src="https://stats.lostdomain.org/js/script.tagged-events.outbound-links.js" />
+      <Script
+        defer
+        data-domain="chat.deckassistant.io"
+        src="https://stats.lostdomain.org/js/script.tagged-events.outbound-links.js"
+      />
       {selectedConversation && (
         <div className="min-h-screen flex flex-col">
           <header>
             <nav className="bg-[#202123]">
-                <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16">
-                        <div className="flex">
-                            <div className="flex flex-shrink-0 items-center justify-start">
-                              <Link href="https://deckassistant.io/">
-                                <img className="block h-14 w-auto lg:hidden" src="https://deckassistant.io/images/deckassistant-logo.png"
-                                    alt="DeckAssistant" /></Link>
-                                <Link href="https://deckassistant.io/">
-                                  <img className="hidden h-14 w-auto lg:block" src="https://deckassistant.io/images/deckassistant-logo.png"
-                                    alt="DeckAssistant" /></Link>
-                                <div className="hidden lg:block text-white ml-4 text-xl">
-                                  <Link href="https://deckassistant.io/">DeckAssistant</Link>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div className="-mr-2 flex justify-items-end grow">
-                            <div className="flex flex-grow grid justify-items-end">
-                                <div className="relative inline-block text-left mt-3 text-white align-middle">
-                                  <Link className="align-middle inline-block rounded-md bg-white px-3.5 py-2.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" href="https://deckassistant.io/dashboard">
-                                    Manage Your Account
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
+              <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16">
+                  <div className="flex">
+                    <div className="flex flex-shrink-0 items-center justify-start">
+                      <Link href="https://deckassistant.io/">
+                        <img
+                          className="block h-14 w-auto lg:hidden"
+                          src="https://deckassistant.io/images/deckassistant-logo.png"
+                          alt="DeckAssistant"
+                        />
+                      </Link>
+                      <Link href="https://deckassistant.io/">
+                        <img
+                          className="hidden h-14 w-auto lg:block"
+                          src="https://deckassistant.io/images/deckassistant-logo.png"
+                          alt="DeckAssistant"
+                        />
+                      </Link>
+                      <div className="hidden lg:block text-white ml-4 text-xl">
+                        <Link href="https://deckassistant.io/">
+                          DeckAssistant
+                        </Link>
+                      </div>
                     </div>
+                  </div>
+                  <div className="-mr-2 flex justify-items-end grow">
+                    <div className="flex flex-grow grid justify-items-end">
+                      <div className="relative inline-block text-left mt-3 text-white align-middle">
+                        <Link
+                          className="align-middle inline-block rounded-md bg-white px-3.5 py-2.5 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          href="https://deckassistant.io/dashboard"
+                        >
+                          Manage Your Account
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </nav>
           </header>
 
-        <main
-          className={`flex h-[calc(100vh-64px)] w-screen flex-col text-sm text-white dark:text-white ${lightMode}`}
-        >
-          <div className="fixed top-0 w-full sm:hidden">
-            <Navbar
-              selectedConversation={selectedConversation}
-              onNewConversation={handleNewConversation}
-            />
-          </div>
-
-          <div className="flex h-full w-full pt-[48px] sm:pt-0">
-            <Chatbar />
-
-            <div className="flex flex-1">
-              <Chat stopConversationRef={stopConversationRef} />
+          <main
+            className={`flex h-[calc(100vh-64px)] w-screen flex-col text-sm text-white dark:text-white ${lightMode}`}
+          >
+            <div className="fixed top-0 w-full sm:hidden">
+              <Navbar
+                selectedConversation={selectedConversation}
+                onNewConversation={handleNewConversation}
+              />
             </div>
 
-            <Promptbar />
-          </div>
-        </main>
+            <div className="flex h-full w-full pt-[48px] sm:pt-0">
+              <Chatbar />
+
+              <div className="flex flex-1">
+                <Chat stopConversationRef={stopConversationRef} />
+              </div>
+
+              <Promptbar />
+            </div>
+          </main>
         </div>
       )}
     </HomeContext.Provider>
