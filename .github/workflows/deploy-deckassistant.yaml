@@ -27,7 +27,7 @@ jobs:
 
       - name: Log into registry
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2.1.0
+        uses: docker/login-action@v3
         with:
           registry: lostdomain.azurecr.io
           username: ${{ secrets.AZURE_CR_USERNAME }}
