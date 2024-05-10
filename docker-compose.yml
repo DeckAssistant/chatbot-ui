@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   chatbot:
-    image: smitmartijn/deckassistant-chatbot-ui:deckassistant
+    image: lostdomain.azurecr.io/deckassistant/chatbot-ui:deckassistant
     restart: unless-stopped
     ports:
       - 3000:3000
