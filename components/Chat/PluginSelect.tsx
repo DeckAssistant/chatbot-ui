@@ -63,7 +63,7 @@ export const PluginSelect: FC<Props> = ({ plugin, onPluginChange }) => {
             Google something 🔎
           </span>
         </div>
-        <div className="group relative flex justify-center">
+        {/*<div className="group relative flex justify-center">
           <button
             type="button"
             className={`inline-flex items-center px-4 py-2 text-sm font-medium flex w-fit gap-3 rounded-l border border-neutral-600 text-black hover:opacity-50 text-white ${
@@ -79,7 +79,7 @@ export const PluginSelect: FC<Props> = ({ plugin, onPluginChange }) => {
           <span className="absolute bottom-14 scale-0 transition-all rounded bg-gray-800 p-4 text-center text-xs text-white group-hover:scale-100 w-48">
             Generate stunning images with DALL-E 3 🖌️
           </span>
-        </div>
+        </div>*/}
       </div>
     </div>
   );
