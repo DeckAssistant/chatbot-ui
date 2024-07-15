@@ -18,9 +18,14 @@ export const PluginSelect: FC<Props> = ({ plugin, onPluginChange }) => {
     } else {
       setActiveButton('chatgpt');
     }
+
+    // set showDallE to true if dalle=true is in the GET parameters of the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    setShowDallE(urlParams.get('dalle') === 'true');
   }, [plugin]);
 
   const [activeButton, setActiveButton] = useState('');
+  const [showDallE, setShowDallE] = useState(false);
 
   const handleButtonClick = (id: any) => {
     setActiveButton(id);
@@ -63,23 +68,25 @@ export const PluginSelect: FC<Props> = ({ plugin, onPluginChange }) => {
             Google something 🔎
           </span>
         </div>
-        {/*<div className="group relative flex justify-center">
-          <button
-            type="button"
-            className={`inline-flex items-center px-4 py-2 text-sm font-medium flex w-fit gap-3 rounded-l border border-neutral-600 text-black hover:opacity-50 text-white ${
-              activeButton === PluginID.DALLE3
-                ? 'bg-neutral-500'
-                : 'bg-[#343541]'
-            }`}
-            id="${PluginID.DALLE3}"
-            onClick={() => handleButtonClick(PluginID.DALLE3)}
-          >
-            <IconBrush size={24} />
-          </button>
-          <span className="absolute bottom-14 scale-0 transition-all rounded bg-gray-800 p-4 text-center text-xs text-white group-hover:scale-100 w-48">
-            Generate stunning images with DALL-E 3 🖌️
-          </span>
-        </div>*/}
+        {showDallE && (
+          <div className="group relative flex justify-center">
+            <button
+              type="button"
+              className={`inline-flex items-center px-4 py-2 text-sm font-medium flex w-fit gap-3 rounded-l border border-neutral-600 text-black hover:opacity-50 text-white ${
+                activeButton === PluginID.DALLE3
+                  ? 'bg-neutral-500'
+                  : 'bg-[#343541]'
+              }`}
+              id="${PluginID.DALLE3}"
+              onClick={() => handleButtonClick(PluginID.DALLE3)}
+            >
+              <IconBrush size={24} />
+            </button>
+            <span className="absolute bottom-14 scale-0 transition-all rounded bg-gray-800 p-4 text-center text-xs text-white group-hover:scale-100 w-48">
+              Generate stunning images with DALL-E 3 🖌️
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
