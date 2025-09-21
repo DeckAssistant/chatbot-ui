@@ -18,7 +18,7 @@ import { authOptions } from '../auth/[...nextauth]';
 
 import { DataSource } from 'typeorm';
 
-const CONVERSATION_LIMIT = 250;
+const CONVERSATION_LIMIT = 500;
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let userId = '';
