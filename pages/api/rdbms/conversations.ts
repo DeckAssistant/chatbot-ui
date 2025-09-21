@@ -18,6 +18,8 @@ import { authOptions } from '../auth/[...nextauth]';
 
 import { DataSource } from 'typeorm';
 
+const CONVERSATION_LIMIT = 250;
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let userId = '';
   if (NEXT_PUBLIC_NEXTAUTH_ENABLED) {
@@ -79,8 +81,9 @@ const rdbmsGetAllConversations = async (
     where: {
       user: { id: user.id },
     },
-    order: { created_at: { direction: 'ASC' } },
+    order: { created_at: { direction: 'DESC' } },
     relations: ['folder'],
+    take: CONVERSATION_LIMIT,
   });
 
   const conversations: Conversation[] = [];
