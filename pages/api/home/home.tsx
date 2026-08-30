@@ -619,8 +619,8 @@ const Home = ({
       </Head>
       <Script
         defer
-        data-domain="chat.deckassistant.io"
-        src="https://stats.lostdomain.org/js/script.tagged-events.outbound-links.js"
+        data-site-id="d383266086e6"
+        src="https://konijn.lostdomain.org/api/script.js"
       />
       {selectedConversation && (
         <div className="min-h-screen flex flex-col">
